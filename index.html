@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	    <link rel="stylesheet" type="text/css" href= "jquery.mobile-1.1.0.min.css" />	
+        <script src="jquery-1.6.4.min.js" type= "text/javascript"></script>
+        <script src="jquery.mobile-1.1.0.min.js" type="text/javascript"></script>
+        <script src="phonegap-1.4.1.js" type="text/javascript"></script>
+        <script src="smsplugin.js" type="text/javascript" ></script>
+        
+	    <script type="text/javascript"> 
+		function enviar_sms(l_num,l_msj){
+				$('#comandos_gps').append('<h5>Se envio comando '+l_msj+'...</h5>');
+			    //alert("Se envia "+l_msj+" a "+l_num);
+			    window.plugins.sms.send(l_num, 
+					l_msj, 
+					function () { 
+					    //envio
+					},
+					function (e) {
+					    //fallo
+					}
+				); // fin window.plugins.sms.send
+		}
+
+		function validar_ingreso()
+		{
+		  //valida gps tracker coban id: 1
+		  if($('#tipo_gps').val() == "1" && $('#telefono').val() != "" && $('#clave').val() != "")
+		  {
+				// muestra los comandos dependiendo del tipo de gps.
+				if($('#tipo_gps').val() == "1") //gps tracker de coban.
+				{
+				   $('#comandos_gps1').show();
+				   $('#comandos_gps2').hide();
+				   $('#comandos_gps3').hide();
+				}  
+				 location = "#pagina_comandos";// dirige a la hoja con los comandos a ejecutar.
+		  }
+		  
+		  if($('#tipo_gps').val() == "2" && $('#telefono2').val() != "" && $('#clave2').val() != "")
+		  {
+			  if($('#tipo_gps').val() == "2") //gps meitrack.
+			  {
+				   $('#comandos_gps2').show();
+				   $('#comandos_gps1').hide();
+				   $('#comandos_gps3').hide();
+				}
+				   
+				 location = "#pagina_comandos";//dirige a la hoja con los comandos a ejecutar
+		  }
+
+		  if($('#tipo_gps').val() == "3" && $('#telefono3').val() != "" && $('#clave3').val() != "")
+		  {
+			  if($('#tipo_gps').val() == "3") //gps ks168
+			  {
+				   $('#comandos_gps3').show();
+				   $('#comandos_gps1').hide();
+				   $('#comandos_gps2').hide();
+			  }
+				   
+				 location = "#pagina_comandos";//dirige a la hoja con los comandos a ejecutar
+		  }
+		}
+
+		//carga el mapa y la informacion para mostrar como detalle de la ubicacion de las coords
+        function ubicar_mapa(){
+		   if($('#latitud').val() != "" && $('#longitud').val() != "")
+		      $('#div_ubicar_mapa').html("<img src='http://maps.google.com/maps/api/staticmap?size="+screen.width+"x"+(screen.height-50)+"&maptype=hybrid&zoom=15&markers=size:mid|color:red|"+$('#latitud').val()+","+$('#longitud').val()+"&mobile=true&sensor=false&aleatorio="+Math.random()+"'>");
+		   else
+		      alert("Indique las coordenadas por favor.")
+		}
+
+
+		//funcion hace el envio del comando al gps
+		function enviar_comando(id_comando)
+		{
+		   if(id_comando == 11)//obtener el imei
+		   {
+			 enviar_sms($('#telefono').val(),"imei"+$('#clave').val());
+			 alert("Comando Enviado Exitosamente!")  
+		   }
+		   if(id_comando == 12)//hacer check al gps
+		   {
+			 enviar_sms($('#telefono').val(),"check"+$('#clave').val());
+			 alert("Comando Enviado Exitosamente!")  
+		   }
+		   if(id_comando == 13)//modo sms
+		   {
+			 enviar_sms($('#telefono').val(),"sms"+$('#clave').val());	  
+			 alert("Comando Enviado Exitosamente!")  
+		   }
+		   if(id_comando == 14)//reset
+		   {
+			 enviar_sms($('#telefono').val(),"reset"+$('#clave').val());
+			 alert("Comando Enviado Exitosamente!")  
+		   }
+		   if(id_comando == 15)//Begin
+		   {
+			 enviar_sms($('#telefono').val(),"begin"+$('#clave').val());
+			 alert("Comando Enviado Exitosamente!")  
+		   } 
+		   if(id_comando == 16)//nofix
+		   {
+			 enviar_sms($('#telefono').val(),"nofix"+$('#clave').val());
+			 alert("Comando Enviado Exitosamente!")  
+		   }
+		   if(id_comando == 17)//arm
+		   {
+			 enviar_sms($('#telefono').val(),"arm"+$('#clave').val());
+			 alert("Comando Enviado Exitosamente!")  
+		   }
+		   if(id_comando == 18)//disarm
+		   {
+			 enviar_sms($('#telefono').val(),"disarm"+$('#clave').val());
+			 alert("Comando Enviado Exitosamente!")  
+		   } 
+		   
+		   if(id_comando == 19)//apn
+		   {  
+			 if($('#apn').val() != "")
+			 {
+				 enviar_sms($('#telefono').val(),"apn"+$('#clave').val()+" "+$('#apn').val());
+				 alert("Comando Enviado Exitosamente!")
+		     }
+			 else
+			    alert("Indique el APN por favor.")
+		   }
+
+		   if(id_comando == 39)//usuario y clave del apn
+		   {  
+			 if($('#uapn').val() != "" && $('#capn').val() != "")
+			 {
+				 enviar_sms($('#telefono').val(),"up"+$('#clave').val()+" "+$('#uapn').val()+" "+$('#capn').val());
+				 alert("Comando Enviado Exitosamente!")
+		     }
+			 else
+			    alert("Indique el Usuario y clave del APN por favor.")
+		   }
+		  
+		   if(id_comando == 20)//servidor
+		   {  
+			 if($('#servidor').val() != "" && $('#servidor_puerto').val() != "")
+			 {
+				 enviar_sms($('#telefono').val(),("adminip"+$('#clave').val()+" "+$('#servidor').val()+" "+$('#servidor_puerto').val()));
+				 alert("Comando Enviado Exitosamente!") 
+			 }
+			 else 
+		      	alert("Recuerde indicar la IP y puerto del servidor.")
+		   }
+			 
+		   if(id_comando == 21)//modo gprs
+		   {
+			 enviar_sms($('#telefono').val(),"gprs"+$('#clave').val());
+			 alert("Comando Enviado Exitosamente!")  
+		   }
+		   
+		   if(id_comando == 22 && confirm("Seguro desea apagar el vehiculo?"))//apagar vehiculo
+		   {
+			 enviar_sms($('#telefono').val(),"stop"+$('#clave').val());
+			 alert("Comando Enviado Exitosamente!")  
+		   }
+		   	  
+		   if(id_comando == 23)//encender vehiculo
+		   {
+			 enviar_sms($('#telefono').val(),"resume"+$('#clave').val());
+			 alert("Comando Enviado Exitosamente!")  
+           }
+		   
+		   //----------------------------FIN COBAN
+		   
+		   //meitrack
+		   if(id_comando == 211)//obtener el imei
+		   {
+			 enviar_sms($('#telefono2').val(),"W"+$('#clave2').val()+",601");
+			 alert("Comando Enviado Exitosamente! Recuerda que en el sistema se coloca solo 14 digitos.")  
+           }
+		   
+		   if(id_comando == 213)//modo sms
+		   {
+			 enviar_sms($('#telefono2').val(),"W"+$('#clave2').val()+",013,0");
+			 alert("Comando Enviado Exitosamente!")  
+           }
+		   
+		   if(id_comando == 215)//borrar toda la configuracion
+		   {
+			 enviar_sms($('#telefono2').val(),"W"+$('#clave2').val()+",990,099##");
+			 alert("Comando Enviado Exitosamente!")  
+           }
+		   
+		   if(id_comando == 219)//config apn
+		   {
+			 //enviar_sms($('#telefono2').val(),"W"+$('#clave2').val()+",011,"+$('#apn2').val());
+			 //alert("Comando Enviado Exitosamente!") 
+			 var addic_apn = "";
+			 if($('#uapn2').val() != "" && $('#capn2').val() != "")
+			 	addic_apn =","+$('#uapn2').val()+","+$('#capn2').val();
+
+			 enviar_sms($('#telefono2').val(),"W"+$('#clave2').val()+",011,"+$('#apn2').val()+addic_apn);
+			 alert("Comando Enviado Exitosamente!") 
+           }
+		   
+		   if(id_comando == 220)//config serv
+		   {
+			 enviar_sms($('#telefono2').val(),"W"+$('#clave2').val()+",012,"+$('#servidor2').val()+","+$('#servidor_puerto2').val());
+			 alert("Comando Enviado Exitosamente!")  
+           }
+		   
+		   if(id_comando == 221)//modo gprs
+		   {
+			 enviar_sms($('#telefono2').val(),"W"+$('#clave2').val()+",013,1");
+			 alert("Comando Enviado Exitosamente!")  
+           }
+		   
+		   if(id_comando == 230)//transmitir cada x min
+		   {
+			 enviar_sms($('#telefono2').val(),"W"+$('#clave2').val()+",014,00006");
+			 alert("Comando Enviado Exitosamente!")  
+           }
+
+           if(id_comando == 231)//transmitir cada x min
+		   {
+		   	 var imei2 = ($('#imei2').val()).substr(1,14); // se recorta el imei original a 11 digitos.
+			 enviar_sms($('#telefono2').val(),"W"+$('#clave2').val()+",010,"+imei2);
+			 alert("Comando Enviado Exitosamente!\n*** Recuerde el imei a colocar en el sistema debe ser: "+imei2)  
+           }
+		   
+		   //ks168 -----------------------------------------------------------------------
+		   if(id_comando == 331)
+		   {
+			 enviar_sms($('#telefono3').val(),"begin"+$('#clave3').val());
+			 alert("Comando Enviado Exitosamente!")  
+           }
+
+           if(id_comando == 315)
+		   {
+			 enviar_sms($('#telefono3').val(),"at"+$('#at3').val()+"sum0");
+			 alert("Comando Enviado Exitosamente!")  
+           }
+
+           if(id_comando == 313)
+		   {
+			 enviar_sms($('#telefono3').val(),"noat"+$('#clave3').val());
+			 alert("Comando Enviado Exitosamente!")  
+           }
+
+           if(id_comando == 330)
+		   {
+		   	 var imei3 = ($('#imei3').val()).substr(4,11); // se recorta el imei original a 11 digitos.
+			 enviar_sms($('#telefono3').val(),"number"+imei3);
+			 alert("Comando Enviado! \n**** Recuerde que en el sistema debe configurar el imei: 0000"+imei3);
+           }
+
+           if(id_comando == 319)
+		   {
+			 enviar_sms($('#telefono3').val(),"apn"+$('#clave3').val()+" "+$('#apn3').val());
+			 alert("Comando Enviado Exitosamente!");
+           }
+
+           if(id_comando == 3199)// usuario y clave del apn
+		   {
+			 if($('#uapn3').val() != "" && $('#capn3').val() != "") {
+				 enviar_sms($('#telefono3').val(),"user "+$('#uapn3').val()+" "+$('#capn3').val());
+				 alert("Comando Enviado Exitosamente!");
+			 }
+			 else{
+			 	alert("Debe indicar el usuario y clave del apn.")
+			 }
+           }
+
+           if(id_comando == 320)
+		   {
+			 enviar_sms($('#telefono3').val(),"ip"+$('#servidor3').val()+"port"+$('#servidor_puerto3').val());
+			 alert("Comando Enviado Exitosamente!");
+           }
+
+           if(id_comando == 311)
+		   {
+			 enviar_sms($('#telefono3').val(),"zone"+$('#clave3').val()+" "+$('#zh3').val());
+			 alert("Comando Enviado Exitosamente!");
+           }
+
+           if(id_comando == 321)
+		   {
+			 enviar_sms($('#telefono3').val(),"web"+$('#clave3').val());
+			 alert("Comando Enviado Exitosamente!");
+           }
+		}
+		
+		//para mostrar los parametros que corresponden al tipo de gps
+		function ingresar_parametros(){
+		   if($('#tipo_gps').val() == "1") {
+		      $('#parametros1').show(); //se muestran los parametros necesarios y se oculta el resto
+			  $('#parametros2').hide();
+			  $('#parametros3').hide();
+		   }
+		   
+		   if($('#tipo_gps').val() == "2") {
+		      $('#parametros2').show();//se muestran los parametros necesarios y se oculta el resto
+			  $('#parametros1').hide();
+			  $('#parametros3').hide();
+		   }
+
+		   if($('#tipo_gps').val() == "3") {
+		      $('#parametros3').show();//se muestran los parametros necesarios y se oculta el resto
+			  $('#parametros1').hide();
+			  $('#parametros2').hide();
+		   }
+		}
+		
+
+		//el dispositivo esta listo
+		function onDeviceReady () {
+		   document.addEventListener("backbutton", onBackKeyDown, false); //back button even
+		}
+		
+		
+		//confirm si se desea cerrar o no la app.
+		function onConfirm(button) // button es un entero
+		{
+           if(button != 1)
+		      navigator.app.exitApp(); //blackberry.app.exit();
+		   else
+		      alert("Si desea salir de la aplicacion sin cerrarla presione la tecla Home o bien cancelar llamada(Blackberry).");
+        }
+
+		
+		// se dispara cuando se presiona el boton de Back
+		function onBackKeyDown(){
+		    navigator.notification.confirm(
+            'Seguro desea cerrar la aplicacion?',  // message
+            onConfirm,              // callback to invoke with index of button pressed
+            'Va a Cerrar el programa.',            // title
+            'No,Si'          // buttonLabels
+             );
+	    }
+
+        document.addEventListener("deviceready", onDeviceReady, false); //dispositivo listo phonegap
+        
+        //listen for SMS
+        //var listener = function (msg, from, date) { alert("Recibido de "+from+": "+msg); }
+        //blackberry.message.sms.isListeningForMessage = true;
+ 	    //blackberry.message.sms.addReceiveListener(listener);
+		
+		
+		//para mostrar los parametros que corresponden al tipo de gps
+		function comenzar_sync(){
+		    var te = $('#tiempo_espera').val();
+		    var tiempo = parseInt(te)*1000;
+		    var tipo = $('#tipo_gps').val()
+		    var gps = $("#tipo_gps option[value='"+tipo+"']").text()
+		    var comandos = [];
+		    
+		    if(tipo == "1") {
+			comandos = [15,19,20,21]
+		    }
+		   
+		    if(tipo == "2") {
+			comandos = [219,220,230,221]
+		    }
+
+		    if(tipo == "3") {
+			comandos = [315,330,319,320,321]
+		    }
+		    
+		    var i = 0, l = comandos.length;
+		    $('#nombre_gps').html('<h1>'+gps+'</h1>');
+		    $('#comandos_gps').html('');
+		    (function iterator() {
+			enviar_comando(comandos[ i ])
+			//$('#comandos_gps').append('<h5>Se envio comando '+comandos[ i ]+'...</h5>');
+			if(++i<l) {
+			    setTimeout(iterator, tiempo);
+			}
+		    })();
+		}
+		
+ 	    //funcion para hacer login del usuario al sistema
+		function login(){
+				/*location = '#startPage';
+				$(".default_server").val($('#servidor_login').val());
+			    */
+
+			    $.mobile.showPageLoadingMsg();
+
+			    $.getJSON("http://"+$("#servidor_login").val()+"/sistema/mods/gpsconf/login.php?usuario="+$('#usuario_login').val()+"&clave="+$('#clave_login').val()+"&jsoncallback=?", function(json) 
+
+				{
+
+				   for(var i in json){
+				   		if(json[i].resultado_login == '1') {
+						   localStorage.setItem('servidor_login',$('#servidor_login').val());
+						   localStorage.setItem('usuario_login',$('#usuario_login').val());
+						   localStorage.setItem('clave_login',$('#clave_login').val());
+
+						   $(".default_server").val($('#servidor_login').val());
+
+						   $('#info_bienvenida').html('<img src="images/getinfo.png" align="middle">&nbsp;&nbsp;<span style="font-family:Arial, Helvetica, sans-serif;font-size:14px;color:#333333;">Saludos <strong>'+$('#usuario_login').val()+'</strong> indique el tipo de gps a configurar:</span>');
+
+						   location = '#startPage';
+						}
+						else
+						   alert("Los datos son incorrectos, verifique por favor.");
+					}
+
+				});//fin $.getJSON("http://"+url_serv+ ......
+
+				//$.mobile.hidePageLoadingMsg();
+
+		}
+
+		</script>
+		
+	</head>
+	<body>
+		
+		<!-- Pagina Login -->
+		<div id="login" data-role="page" data-theme="d">
+			<div data-role="header" data-theme="c">
+				<a href="javascript:void(0);" data-role="button" data-icon="delete" onClick="navigator.app.exitApp();">Cerrar</a>
+				<h3>GPSconf v1.0</h3>
+			</div>
+			
+			<div data-role="content" data-theme="d">
+			
+				<div align='center'>
+				
+				<br><span style="font-family:arial;font-size:14px;color:#333333"><strong><img src="images/mankey.png" align="middle">&nbsp;&nbsp;Acceso al Sistema.</strong></span>
+				</span>
+				</div>
+				
+				<br>
+				<span style="font-family:arial;font-size:11px;color:#333333"><strong>Servidor de validaci&oacute;n: (formato IP: 10.0.0.1)</strong></span>
+				<input type="text" name="servidor_login" id="servidor_login">
+
+				<span style="font-family:arial;font-size:11px;color:#333333"><strong>Usuario:</strong></span>
+				<input type="text" name="usuario_login" id="usuario_login">
+				
+				<span style="font-family:arial;font-size:11px;color:#333333"><strong>Clave:</strong></span>
+				<input type="password" name="clave_login" id="clave_login">
+				
+				<br><br>
+				
+				<a href="#" data-role="button" data-icon="check" data-theme="b" onclick="login();">Ingresar al sistema</a>
+				
+			</div>
+			
+		</div>
+
+
+		<!-- Pagina Inicio -->
+		<div id="startPage" data-role="page" data-theme="d">
+			<div data-role="header" data-theme="c">
+
+				<a href="#login" data-role="button" data-icon="delete" onclick="$('#usuario_login').val('');$('#clave_login').val('');">Salir</a>
+				<h3>GPSconf v1.0</h3>
+				<!--<a href="javascript:void(0);" data-role="button" data-icon="info" onClick="location='#info'">Info</a>-->
+			</div>
+			
+			<div data-role="content" data-theme="d">
+			
+			    <div id="imagen_principal" align="center"> <img src="images/inicio.png"></div>
+				<div align='center' id='info_bienvenida'>
+				
+			    </div>
+                <p>
+				
+				<select name="tipo_gps" id="tipo_gps">
+					<option value="1" selected="selected">GPS Tracker 102,103,104,106,107</option>
+					<option value="2">Meitrack GT30/GT60i/VT300/VT400</option>
+					<option value="3">KS168</option>
+				</select>
+
+				<br>
+				<input type="button" name="boton_ingreso" id="boton_ingreso" value="Continuar" data-theme="b" data-icon="check" onClick="ingresar_parametros();location='#parametros';">
+				<input type="button" name="boton_cargarmapa" id="boton_cargarmapa" value="Ubicar Coordenadas" data-theme="b" data-icon="search" onClick="location='#carga_mapa';">
+			</div>
+			
+			
+		</div>
+		
+		<!-- Pop-up configuracion automatica -->
+		<div data-role="page"id="timeout" data-theme="d">
+		    <div data-role="header" data-theme="c"><h1>Config. autom&aacute;tica plataforma:</h1></div>
+		    <div data-role="content" data-theme="d">
+			Tiempo de espera entre comando:
+			<select name="tiempo_espera" id="tiempo_espera">
+			    <option value="5" selected="selected">5</option>
+			    <option value="10">10</option>
+			    <option value="15">15</option>
+			    <option value="20">20</option>
+			</select>
+			<input type="button" name="comenzar_sync" id="comenzar_sync" value="Comenzar!" data-theme="b" data-icon="check" onClick="location='#pagina_sync';setTimeout('comenzar_sync();',1000);">
+		    </div>
+		    <div data-role="footer"><h5>Presione icono con la 'x' para volver</h5></div>
+		</div>
+		
+		<!-- Pagina de parametros -->
+		<div id="parametros" data-role="page" data-theme="d">
+			<div data-role="header" data-theme="c">
+				<a href="#startPage" data-icon="arrow-l">Volver</a>
+				<h3>GPSconf v1.0</h3>
+			</div>
+			
+			<div data-role="content" data-theme="d">
+			
+				<img src="images/getinfo.png" align="middle">&nbsp;&nbsp;<span style="font-family:Arial, Helvetica, sans-serif;font-size:14px;color:#333333;font-weight:600">Seleccione los par&aacute;metros:</span>
+                <p>
+				
+				<!--INICIO GPS tracker Coban-->
+				<div id="parametros1" style="display:none;">
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">N&uacute;mero de Tel&eacute;fono:</span>
+                <input type="number" name="telefono" id="telefono" value=""/>
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Clave del GPS:</span>
+                <input type="text" name="clave" id="clave" value="123456"/>
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Servidor para GPRS: (Ej: 127.127.127.127)</span>
+                <input type="text" name="servidor" id="servidor" value="" class="default_server"/>
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Puerto Servidor para GPRS: </span>
+                <input type="number" name="servidor_puerto" id="servidor_puerto" value="9001"/> 
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">APN: (Ej: gprsweb.digitel.ve)</span>
+                <input type="text" name="apn" id="apn" value=""/>
+
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Usuario APN: </span>
+                <input type="text" name="uapn" id="uapn" value=""/>
+
+                <span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Clave APN: </span>
+                <input type="text" name="capn" id="capn" value=""/>
+
+				<br>
+				<input type="button" name="boton_ingreso" id="boton_ingreso" value="Configurar manualmente" data-theme="b" onClick="validar_ingreso(1)" data-icon="check">
+				<a href="#timeout" name="conf_manual" id="conf_manual" data-rel="dialog" data-role="button"  data-theme="b" data-icon="check">Configuraci&oacute;n autom&aacute;tica</a>
+				</div>
+				
+				<!--Fin GPS tracker Coban-->
+				
+				<!--INICIO GPS Meitrack-->
+				<div id="parametros2" style="display:none;">
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">N&uacute;mero de Tel&eacute;fono:</span>
+                <input type="number" name="telefono2" id="telefono2" value=""/>
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Clave del GPS:</span>
+                <input type="text" name="clave2" id="clave2" value="000000"/>
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">IMEI Original del gps:</span>
+                <input type="text" name="imei2" id="imei2" value=""/>
+
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Servidor para GPRS: (Ej: 127.127.127.127)</span>
+                <input type="text" name="servidor2" id="servidor2" value="" class="default_server"/>
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Puerto Servidor para GPRS: </span>
+                <input type="number" name="servidor_puerto2" id="servidor_puerto2" value="9200"/> 
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">APN:</span>
+                
+                <input type="text" name="apn2" id="apn2" value=""/>
+
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Usuario APN: </span>
+                <input type="text" name="uapn2" id="uapn2" value=""/>
+
+                <span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Clave APN: </span>
+                <input type="text" name="capn2" id="capn2" value=""/>
+
+				<br>
+				<input type="button" name="boton_ingreso2" id="boton_ingreso2" value="Configurar manualmente" data-theme="b" onClick="validar_ingreso(2)" data-icon="check">
+				<a href="#timeout" name="conf_manual2" id="conf_manual2" data-rel="dialog" data-role="button"  data-theme="b" data-icon="check">Configuraci&oacute;n autom&aacute;tica</a>
+				</div>
+				<!--Fin GPS tracker Meitrack-->
+
+				<!--INICIO GPS ks168-->
+				<div id="parametros3" style="display:none;">
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">N&uacute;mero de Tel&eacute;fono:</span>
+                <input type="number" name="telefono3" id="telefono3" value=""/>
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Clave del GPS:</span>
+                <input type="text" name="clave3" id="clave3" value="123456"/>
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">IMEI original del GPS: </span>
+                <input type="number" name="imei3" id="imei3" value="" placeholder="15 digits..."/>
+
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Servidor para GPRS: (Ej: 127.127.127.127)</span>
+                <input type="text" name="servidor3" id="servidor3" value="" class="default_server"/>
+
+                <span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Transmitir automaticamente cada (segs): </span>
+                <input type="text" name="at3" id="at3" value="60"/>
+
+                <span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Zona Horaria: </span>
+                <input type="text" name="zh3" id="zh3" value="-4"/>
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Puerto Servidor para GPRS: </span>
+                <input type="number" name="servidor_puerto3" id="servidor_puerto3" value="9900"/> 
+				
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">APN:</span>
+                
+                <input type="text" name="apn3" id="apn3" value=""/>
+
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Usuario APN: </span>
+                <input type="text" name="uapn3" id="uapn3" value=""/>
+
+                <span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Clave APN: </span>
+                <input type="text" name="capn3" id="capn3" value=""/>
+
+				<br>
+				<input type="button" name="boton_ingreso3" id="boton_ingreso3" value="Configurar manualmente" data-theme="b" onClick="validar_ingreso(3)" data-icon="check">
+				<a href="#timeout" name="conf_manual3" id="conf_manual3" data-rel="dialog" data-role="button"  data-theme="b" data-icon="check">Configuraci&oacute;n autom&aacute;tica</a>
+				</div>
+				<!--Fin GPS tracker ks168-->
+			</div>
+		</div>
+		
+		
+		<!--Pagina Ejecucion de comandos-->
+		<div id="pagina_comandos" data-role="page" data-theme="d">
+			<div data-role="header" data-theme="c" data-position="inline">
+			    <a href="#parametros" data-icon="arrow-l">Volver</a>
+				<h3>GPSconf v1.0</h3>
+				
+			</div>
+			
+			<div data-role="content" data-theme="d">
+			    <img src="images/options.png" align="middle">&nbsp;&nbsp;<span style="font-family:Arial, Helvetica, sans-serif;font-size:14px;color:#333333;">Comandos a Enviar:</span>
+				<!--Comandos de coban-->
+				<div id="comandos_gps1" style="display:none;"><input type="button" name="comando_11" id="comando_11" value="Obtener IMEI" data-theme="b" onClick="enviar_comando(11)" data-icon="check"><br><input type="button" name="comando_13" id="comando_13" value="Modo SMS" data-theme="b" onClick="enviar_comando(13)" data-icon="check"><br><input type="button" name="comando_15" id="comando_15" value="Borrar Configuraci&oacute;n(Begin)" data-theme="b" onClick="enviar_comando(15)" data-icon="check"><br><input type="button" name="comando_19" id="comando_19" value="Configurar APN" data-theme="b" onClick="enviar_comando(19)" data-icon="check"><br><input type="button" name="comando_39" id="comando_39" value="Conf. Usuario y clave de APN " data-theme="b" onClick="enviar_comando(39)" data-icon="check"><br><input type="button" name="comando_20" id="comando_20" value="Configurar Servidor" data-theme="b" onClick="enviar_comando(20)" data-icon="check"><br><input type="button" name="comando_16" id="comando_16" value="Cancelar Reporte Autom&aacute;tico(Nofix)" data-theme="b" onClick="enviar_comando(16)" data-icon="check"><br><input type="button" name="comando_21" id="comando_21" value="Modo GPRS" data-theme="b" onClick="enviar_comando(21)" data-icon="check"><br><input type="button" name="comando_12" id="comando_12" value="Chequear Status" data-theme="b" onClick="enviar_comando(12)" data-icon="check"><br><input type="button" name="comando_14" id="comando_14" value="Resetear" data-theme="b" onClick="enviar_comando(14)" data-icon="check"><br><input type="button" name="comando_17" id="comando_17" value="Armar GPS(Arm)" data-theme="b" onClick="enviar_comando(17)" data-icon="check"><br><input type="button" name="comando_18" id="comando_18" value="Desarmar GPS(Disarm)" data-theme="b" onClick="enviar_comando(18)" data-icon="check"><br><!--<input type="button" name="comando_22" id="comando_22" value="Apagar Vehiculo" data-theme="a" onClick="enviar_comando(22)" data-icon="minus"><br><input type="button" name="comando_23" id="comando_23" value="Activar encendido de Vehiculo" data-theme="e" onClick="enviar_comando(23)" data-icon="plus">--></div>
+
+				<!--Comandos de Meitrack-->
+				<div id="comandos_gps2" style="display:none;"><input type="button" name="comando_231" id="comando_231" value="Configurar IMEI" data-theme="b" onClick="enviar_comando(231)" data-icon="check"><br><input type="button" name="comando_213" id="comando_213" value="Modo SMS" data-theme="b" onClick="enviar_comando(213)" data-icon="check"><br><input type="button" name="comando_215" id="comando_215" value="Borrar Configuraci&oacute;n." data-theme="b" onClick="enviar_comando(215)" data-icon="check"><br><input type="button" name="comando_19" id="comando_219" value="Configurar APN" data-theme="b" onClick="enviar_comando(219)" data-icon="check"><br><input type="button" name="comando_220" id="comando_220" value="Configurar Servidor" data-theme="b" onClick="enviar_comando(220)" data-icon="check"><br><input type="button" name="comando_215" id="comando_215" value="Transmision cada 1min." data-theme="b" onClick="enviar_comando(230)" data-icon="check"><br><input type="button" name="comando_21" id="comando_21" value="Modo GPRS" data-theme="b" onClick="enviar_comando(221)" data-icon="check"><br><input type="button" name="comando_211" id="comando_211" value="Consultar IMEI" data-theme="b" onClick="enviar_comando(211)" data-icon="check"></div>
+
+				<!--Comandos de KS168-->
+				<div id="comandos_gps3" style="display:none;"><input type="button" name="comando_331" id="comando_331" value="Borrar Config(Begin)" data-theme="b" onClick="enviar_comando(331)" data-icon="check"><br><input type="button" name="comando_319" id="comando_319" value="Configurar APN" data-theme="b" onClick="enviar_comando(319)" data-icon="check"><br><input type="button" name="comando_3199" id="comando_3199" value="Conf. Usuario y clave de APN " data-theme="b" onClick="enviar_comando(3199)" data-icon="check"><br><input type="button" name="comando_320" id="comando_320" value="Configurar IP y Puerto" data-theme="b" onClick="enviar_comando(320)" data-icon="check"><br><input type="button" name="comando_315" id="comando_315" value="Config. IMEI" data-theme="b" onClick="enviar_comando(330)" data-icon="check"><br><input type="button" name="comando_311" id="comando_311" value="Config Zona Horaria" data-theme="b" onClick="enviar_comando(311)" data-icon="check"><br><input type="button" name="comando_313" id="comando_313" value="Cancelar Transmision Auto" data-theme="b" onClick="enviar_comando(313)" data-icon="check"><br><input type="button" name="comando_315" id="comando_315" value="Transm. Auto" data-theme="b" onClick="enviar_comando(315)" data-icon="check"><br><input type="button" name="comando_321" id="comando_321" value="Modo GPRS" data-theme="b" onClick="enviar_comando(321)" data-icon="check"></div>
+				
+			</div>
+			
+		</div>
+		
+		<!--Pagina envio de comandos-->
+		<div id="pagina_sync" data-role="page" data-theme="d">
+			<div data-role="header" data-theme="c" data-position="inline">
+			    <a href="#parametros" data-icon="arrow-l">Volver</a>
+				<h3>GPSconf v1.0</h3>
+				
+			</div>
+			
+			<div data-role="content" data-theme="d">
+				<div id="nombre_gps"></div>
+				<div id="comandos_gps"></div>
+			</div>
+			
+		</div>
+		
+		
+		<!--Pagina Carga el mapa con la ubicacion actual -->
+		<div id="carga_mapa" data-role="page" data-theme="d">
+			<div data-role="header" data-theme="c" data-position="inline">
+			    <a href="#startPage" data-icon="arrow-l">Volver</a>
+				<h3>GPSconf v1.0</h3>
+			</div>
+			
+			<div data-role="content" data-theme="d">
+			
+				<span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Longitud:</span>
+                <input type="text" name="longitud" id="longitud" value=""/>
+
+                <span style="font-family:Arial, Helvetica, sans-serif;font-size:12px;color:#333333;font-weight:600">Latitud:</span>
+                <input type="text" name="latitud" id="latitud" value=""/>
+				
+				<input type="button" name="boton_cargarubica" id="boton_cargarubica" value="Ver en mapa!" data-theme="b" data-icon="search" onClick="ubicar_mapa();" data-inline="true">
+
+				<div id="div_ubicar_mapa"></div>
+
+			</div>
+						
+		</div>
+		
+		<script>
+		if(localStorage.getItem('servidor_login') != "") { $('#servidor_login').val(localStorage.getItem('servidor_login')); }
+		if(localStorage.getItem('usuario_login') != "") { $('#usuario_login').val(localStorage.getItem('usuario_login')); }
+		if(localStorage.getItem('clave_login') != "") { $('#clave_login').val(localStorage.getItem('clave_login')); }
+
+		</script>
+
+	</body>
+</html>
