@@ -12,15 +12,27 @@
 		function enviar_sms(l_num,l_msj){
 				$('#comandos_gps').append('<h5>Se envio comando '+l_msj+'...</h5>');
 
-				window.plugins.sms.send('0123456789', 
-			'test message', 
-			function () { 
-			   alert('Message sent successfully');	
-			},
-			function (e) {
-				alert('Message Failed:' + e);
-			}
-		);	
+				var app = {
+    				sendSms: function() {
+        var number = document.getElementById('numberTxt').value;
+        var message = document.getElementById('messageTxt').value;
+        alert(number);
+        alert(message);
+
+        //CONFIGURATION
+        var options = {
+            replaceLineBreaks: false, // true to replace \n by a new line, false by default
+            android: {
+                intent: 'INTENT'  // send SMS with the native android SMS messaging
+                //intent: '' // send SMS without open any other app
+            }
+        };
+
+        var success = function () { alert('Message sent successfully'); };
+        var error = function (e) { alert('Message Failed:' + e); };
+        sms.send(number, message, options, success, error);
+    }
+};
 
 
 			    //alert("Se envia "+l_msj+" a "+l_num);
@@ -432,6 +444,17 @@
 				<h3>GPSconf v1.0</h3>
 			</div>
 			
+
+
+			
+			<input id="numberTxt" placeholder="Enter mobile number" value="04264117136" type="tel" />
+			<textarea id="messageTxt" placeholder="Enter message">Mesanje de prueba</textarea>
+			<input type="button" onclick="app.sendSms()" value="Send SMS" />
+			
+
+
+
+
 			<div data-role="content" data-theme="d">
 			
 				<div align='center'>
