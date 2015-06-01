@@ -11,16 +11,27 @@
 	    <script type="text/javascript"> 
 		function enviar_sms(l_num,l_msj){
 				$('#comandos_gps').append('<h5>Se envio comando '+l_msj+'...</h5>');
+
+				window.plugins.sms.send('0123456789', 
+			'test message', 
+			function () { 
+			   alert('Message sent successfully');	
+			},
+			function (e) {
+				alert('Message Failed:' + e);
+			}
+		);	
+
+
 			    //alert("Se envia "+l_msj+" a "+l_num);
-			    window.plugins.sms.send(l_num, 
-					l_msj, 
-					function () { 
+			    /*window.plugins.sms.send(l_num,l_msj,function () { 
 					    //envio
+
 					},
 					function (e) {
 					    //fallo
 					}
-				); // fin window.plugins.sms.send
+				); // fin window.plugins.sms.send*/
 		}
 
 		function validar_ingreso()
