@@ -9,10 +9,7 @@
         <script src="smsplugin.js" type="text/javascript" ></script>
         
 	    <script type="text/javascript"> 
-		function enviar_sms(l_num,l_msj){
-				$('#comandos_gps').append('<h5>Se envio comando '+l_msj+'...</h5>');
-
-				var app = {
+			var app = {
     				sendSms: function() {
         var number = document.getElementById('numberTxt').value;
         var message = document.getElementById('messageTxt').value;
@@ -33,6 +30,13 @@
         sms.send(number, message, options, success, error);
     }
 };
+
+
+
+		function enviar_sms(l_num,l_msj){
+				$('#comandos_gps').append('<h5>Se envio comando '+l_msj+'...</h5>');
+
+				
 
 
 			    //alert("Se envia "+l_msj+" a "+l_num);
@@ -446,7 +450,7 @@
 			
 
 
-			
+
 			<input id="numberTxt" placeholder="Enter mobile number" value="04264117136" type="tel" />
 			<textarea id="messageTxt" placeholder="Enter message">Mesanje de prueba</textarea>
 			<input type="button" onclick="app.sendSms()" value="Send SMS" />
